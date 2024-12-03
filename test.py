@@ -2,8 +2,10 @@ import tkinter
 import tkinter as tk
 
 def draw_grid():
-    button = tkinter.Button(root)
-    button.pack()
+    for column in range(3):
+        for row in range(3):
+            button = tkinter.Button(root)
+            button.grid(row=row, column=column)
 
  #creer la fenêtre de jeu
 root = tk.Tk()
