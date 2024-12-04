@@ -1,10 +1,32 @@
 import random
 
-#Intro du jeu 
-print('Bienvenue sur Tic Tac Toe ! Arriveras-tu à me battre?')
+""" 
+Jeu de Tic Tac Toe 
+Ce programme permet de jouer au jeu de Tic Tac Toe en mode console. 
+Deux joueurs s'affrontent tour à tour en choisissant une case sur une grille de 3x3. 
+Le premier joueur à aligner trois de ses symboles (horizontalement, verticalement ou en diagonale) 
+gagne la partie. En cas de grille pleine sans victoire, la partie se termine par un match nul. 
+Fonctions : 
+- intro() : Affiche le message de bienvenue. 
+- initialiser_grille() : Initialise une grille de jeu vide pour le Tic Tac Toe. 
+- afficher_grille(grille) : Affiche la grille actuelle du jeu. 
+- verifier_lignes(grille, symbole) : Vérifie si une des lignes de la grille est gagnante. 
+- verifier_colonnes(grille, symbole) : Vérifie si une des colonnes de la grille est gagnante. 
+- verifier_diagonales(grille, symbole) : Vérifie si une des diagonales de la grille est gagnante. 
+- verifier_victoire(grille, symbole) : Vérifie si le joueur actuel a gagné. 
+- grille_pleine(grille) : Vérifie si la grille est pleine. 
+- saisir_coup(joueur, grille) : Demande au joueur de saisir son coup et met à jour la grille. 
+- morpion() : Fonction principale du jeu Tic Tac Toe. 
 
-# Grille
-grille = [[" " for _ in range(3)] for _ in range(3)]
+Lancer le jeu :
+- morpion() : Démarre le jeu Tic Tac Toe. 
+
+"""
+
+
+# Initialisation de la grille
+def initialiser_grille():
+    return [[" " for _ in range(3)] for _ in range(3)]
 
 # Fonction pour afficher la grille
 def afficher_grille(grille):
@@ -13,87 +35,38 @@ def afficher_grille(grille):
         print("| " + " | ".join(ligne) + " |")
         print("+---+---+---+")
 
-# Vérification des conditions de victoire
-def verifier_victoire(grille, symbole):
-    # Vérifier les lignes
+# Vérification des lignes
+def verifier_lignes(grille, symbole):
     for ligne in grille:
         if ligne == [symbole, symbole, symbole]:
             return True
-    # Vérifier les colonnes
+    return False
+
+# Vérification des colonnes
+def verifier_colonnes(grille, symbole):
     for col in range(3):
         if grille[0][col] == grille[1][col] == grille[2][col] == symbole:
             return True
-    # Vérifier les diagonales
+    return False
+
+# Vérification des diagonales
+def verifier_diagonales(grille, symbole):
     if grille[0][0] == grille[1][1] == grille[2][2] == symbole:
         return True
-    if grille[0][2] == grille[1][1] == grille[2][0]:
-        return True
-    return False   
-# Vérifier si la grille est pleine
-def grille_pleine(grille):
-    for ligne in grille:
-        if " " in ligne:
-            return False
-    return True
-     
-
-# Demander le choix du joueur
-def jouer_tour(joueur):
-    while True:
-        try:
-            choix = int(input(f"Joueur {joueur}, entrez un numéro de case (1-9) : ")) - 1
-            x, y = divmod(choix, 3)  # Calculer les indices ligne et colonne
-            if grille[x][y] == " ":
-                grille[x][y] = joueur
-                break
-            else:
-                print("Cette case est déjà prise. Essayez une autre.")
-        except (ValueError, IndexError):
-            print("Entrée invalide. Entrez un numéro entre 1 et 9.")
-
-
-# Jeu principal
-def morpion():
-    afficher_grille(grille)
-    joueur_actuel = "X"
-    
-    while True:
-        # Jouer le tour
-        jouer_tour(joueur_actuel)
-        afficher_grille(grille)
-        
-        # Vérifier la victoire
-        if verifier_victoire(grille, joueur_actuel):
-            print(f"Félicitations, le joueur {joueur_actuel} a gagné !")
-            break
-        
-        # Vérifier l'égalité
-        if grille_pleine(grille):
-            print("Match nul ! Merci d'avoir joué.")
-            break
-        
-        # Changer de joueur
-        joueur_actuel = "O" if joueur_actuel == "X" else "X"
-
-# Vérification des conditions de victoire
-def verifier_victoire(grille, symbole):
-    # Vérifier les lignes
-    for ligne in grille:
-        if ligne == [symbole, symbole, symbole]:
-            return True
-    # Vérifier les colonnes
-    for col in range(3):
-        if grille[0][col] == grille[1][col] == grille[2][col] == symbole:
-            return True
-    # Vérifier les diagonales
-    if grille[0][0] == grille[1][1] == grille[2][2] == symbole:
-        return True
-    if grille[0][2] == grille[1][1] == grille[2][0]:
+    if grille[0][2] == grille[1][1] == grille[2][0] == symbole:
         return True
     return False
 
+# Vérification de la victoire
+def verifier_victoire(grille, symbole):
+    return verifier_lignes(grille, symbole) or verifier_colonnes(grille, symbole) or verifier_diagonales(grille, symbole)
+
+# Vérifier si la grille est pleine
+def grille_pleine(grille):
+    return all(cell != " " for ligne in grille for cell in ligne)
+
 # Demander le choix du joueur
-def jouer_tour(joueur):
+def saisir_coup(joueur, grille):
     while True:
         try:
             choix = int(input(f"Joueur {joueur}, entrez un numéro de case (1-9) : ")) - 1
@@ -106,42 +79,31 @@ def jouer_tour(joueur):
         except (ValueError, IndexError):
             print("Entrée invalide. Entrez un numéro entre 1 et 9.")
 
-
-
-#les conditions pour gagner : 
-def lignehorizontle(plateau):
-    global gagnant
-    if plateau[0] == plateau[1] == plateau[2] and plateau[0] != "-":
-        gagnant = plateau[0]
-        return True
-    elif plateau[3] == plateau[4] == plateau[5] and plateau[3] != "-":
-        gagnant = plateau[3]
-        return True
-    elif plateau[6] == plateau[7] == plateau[8] and plateau[6] != "-":
-        gagnant = plateau[6]
-        return True
-
-
+# Boucle principale du jeu
 def morpion():
+
+    # Intro du jeu
+    def intro():
+        print('Bienvenue sur Tic Tac Toe ! Le premier joueur peut commencer. Que le meilleur gange..')
+
+    intro()
+
+    grille = initialiser_grille()
     afficher_grille(grille)
     joueur_actuel = "X"
     
     while True:
-        # Jouer le tour
-        jouer_tour(joueur_actuel)
+        saisir_coup(joueur_actuel, grille)
         afficher_grille(grille)
         
-        # Vérifier la victoire
         if verifier_victoire(grille, joueur_actuel):
             print(f"Félicitations, le joueur {joueur_actuel} a gagné !")
             break
         
-        # Vérifier l'égalité
         if grille_pleine(grille):
             print("Match nul ! Merci d'avoir joué.")
             break
         
-        # Changer de joueur
         joueur_actuel = "O" if joueur_actuel == "X" else "X"
 
 # Lancer le jeu
