@@ -73,7 +73,7 @@ def verifier_fin_jeu():
     verifier_match_nul()
 
 def verifier_victoire() :
-                                                    #Global = 
+                                                    #Global = Décris une variable comme "Global", peut étre accessible et changer au fur et a mesure du programme
     global fin_jeu
     global gagnant                                                                                                          
 
