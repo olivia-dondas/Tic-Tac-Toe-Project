@@ -7,9 +7,9 @@ Deux joueurs s'affrontent tour à tour en choisissant une case sur une grille de
 Le premier joueur à aligner trois de ses symboles (horizontalement, verticalement ou en diagonale) 
 gagne la partie. En cas de grille pleine sans victoire, la partie se termine par un match nul. 
 Fonctions : 
-- intro() : Affiche le message de bienvenue. 
 - initialiser_grille() : Initialise une grille de jeu vide pour le Tic Tac Toe. 
 - afficher_grille(grille) : Affiche la grille actuelle du jeu. 
+- afficher_grille_numerique() : Affiche la grille avec les numéros pour indiquer les positions possibles. 
 - verifier_lignes(grille, symbole) : Vérifie si une des lignes de la grille est gagnante. 
 - verifier_colonnes(grille, symbole) : Vérifie si une des colonnes de la grille est gagnante. 
 - verifier_diagonales(grille, symbole) : Vérifie si une des diagonales de la grille est gagnante. 
@@ -17,10 +17,10 @@ Fonctions :
 - grille_pleine(grille) : Vérifie si la grille est pleine. 
 - saisir_coup(joueur, grille) : Demande au joueur de saisir son coup et met à jour la grille. 
 - morpion() : Fonction principale du jeu Tic Tac Toe. 
+- intro() : Affiche le message de bienvenue. 
 
 Lancer le jeu :
 - morpion() : Démarre le jeu Tic Tac Toe. 
-
 """
 
 # Initialisation de la grille
@@ -29,10 +29,26 @@ def initialiser_grille():
 
 # Fonction pour afficher la grille
 def afficher_grille(grille):
-    print("\n+---+---+---+")
+    lignes = ["+---+---+---+"]
     for ligne in grille:
-        print("| " + " | ".join(ligne) + " |")
-        print("+---+---+---+")
+        lignes.append("| " + " | ".join(ligne) + " |")
+        lignes.append("+---+---+---+")
+    return lignes
+
+# Fonction de l'affichage de la grille avec chiffres
+def afficher_grille_numerique():
+    lignes = ["+---+---+---+"]
+    for i in range(0, 9, 3):
+        lignes.append(f"| {i+1} | {i+2} | {i+3} |")
+        lignes.append("+---+---+---+")
+    return lignes
+
+# Fonction pour afficher les deux grilles côte à côte
+def afficher_grilles_cote_a_cote(grille):
+    grille_jeu = afficher_grille(grille)
+    grille_chiffres = afficher_grille_numerique()
+    for ligne_jeu, ligne_chiffre in zip(grille_jeu, grille_chiffres):
+        print(ligne_jeu, "  ", ligne_chiffre)
 
 # Vérification des lignes
 def verifier_lignes(grille, symbole):
@@ -68,42 +84,42 @@ def grille_pleine(grille):
 def saisir_coup(joueur, grille):
     while True:
         try:
-            choix = int(input(f"Joueur {joueur}, entrez un numéro de case (1-9) : ")) - 1
+            choix = int(input(f"Joueur {joueur}, choisis un numéro de case entre 1 et 9 : ")) - 1
             x, y = divmod(choix, 3)  # Calculer les indices ligne et colonne
             if grille[x][y] == " ":
                 grille[x][y] = joueur
                 break
             else:
-                print("Cette case est déjà prise. Essayez une autre.")
+                print("Too bad! Cette case est déjà prise. Essaies en une autre.")
         except (ValueError, IndexError):
-            print("Entrée invalide. Entrez un numéro entre 1 et 9.")
+            print("Entrée invalide. -_- Choisis un numéro entre 1 et 9.")
 
 # Boucle principale du jeu
 def morpion():
-
     # Intro du jeu
     def intro():
-        print('Bienvenue sur Tic Tac Toe ! Le premier joueur peut commencer. Que le meilleur gange..')
+        print('Bienvenue sur Tic Tac Toe ! Le premier joueur peut commencer. Le premier joueur qui aligne 3 symboles remporte la partie. Que le meilleur gagne.')
 
     intro()
 
     grille = initialiser_grille()
-    afficher_grille(grille)
+    afficher_grilles_cote_a_cote(grille)
     joueur_actuel = "X"
     
     while True:
         saisir_coup(joueur_actuel, grille)
-        afficher_grille(grille)
+        afficher_grilles_cote_a_cote(grille)
         
         if verifier_victoire(grille, joueur_actuel):
-            print(f"Félicitations, le joueur {joueur_actuel} a gagné !")
+            print(f"Bravooo champion! C'est le joueur {joueur_actuel} qui a gagné !")
             break
         
         if grille_pleine(grille):
-            print("Match nul ! Merci d'avoir joué.")
+            print("Match nul... comme vous les LOSERS! Merci quand même d'avoir joué.")
             break
         
         joueur_actuel = "O" if joueur_actuel == "X" else "X"
 
 # Lancer le jeu
 morpion()
+
